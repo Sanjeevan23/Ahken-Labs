@@ -1,0 +1,164 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ====== Header wrapper & header exact spacing ====== */
+
+.header-wrapper {
+  width: 100%;
+  padding-left: 200px;
+  /* as requested */
+  padding-right: 200px;
+  /* as requested */
+  padding-top: 20px;
+  padding-bottom: 16px;
+  position: fixed;
+  /* header overlay on top of hero and stays */
+  top: 0;
+  left: 0;
+  z-index: 80;
+  pointer-events: none;
+  /* wrapper allows header inside to handle pointer events */
+  display: flex;
+  justify-content: center;
+  /* center inner content */
+}
+
+/* inner container that actually receives pointer events */
+.header-inner {
+  pointer-events: auto;
+  width: 100%;
+  max-width: 1400px;
+  /* optional content width */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* header box (visual background you described) */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 8px;
+  /* paddingVertical: 8 */
+  padding-bottom: 8px;
+  padding-left: 24px;
+  /* logo group paddingLeft */
+  padding-right: 8px;
+  border-radius: 24px;
+  /* border-radius: 24 */
+  backdrop-filter: blur(100px);
+  -webkit-backdrop-filter: blur(100px);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+}
+
+/* logo group */
+.logo-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* tabs container (vertical margin 16) */
+.tabs {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+  margin-bottom: 16px;
+  align-items: center;
+}
+
+/* tab style */
+.tab {
+  padding-top: 12px;
+  /* paddingVertical: 12 */
+  padding-bottom: 12px;
+  padding-left: 20px;
+  /* paddingHorizontal: 20 */
+  padding-right: 20px;
+  border-radius: 40px;
+  /* default radius (selected uses border) */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* selected tab */
+.tab.selected {
+  border-width: 2px;
+  border-style: solid;
+  border-color: #FFFFFF;
+  border-radius: 40px;
+}
+
+/* right button wrapper */
+.header-button-wrapper {
+  margin-top: 8px;
+  margin-bottom: 8px;
+  margin-right: 8px;
+}
+
+/* hero base to allow header overlay */
+.hero-root {
+  position: relative;
+  width: 100%;
+  min-height: 70vh;
+  /* adjust as needed */
+  overflow: hidden;
+  /* gradient background from your spec */
+  background: linear-gradient(360deg, #3A41AA 0%, #071A3E 100%);
+}
+
+/* hero image (fills width and adjusts responsively) */
+.hero-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+/* hero content sits above the image and below header */
+.hero-content {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 120px 24px 80px;
+  /* pushes content down (so header doesn't overlap content) */
+}
+
+/* Responsive - reduce huge paddings on smaller screens */
+@media (max-width: 1200px) {
+  .header-wrapper {
+    padding-left: 48px;
+    padding-right: 48px;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-wrapper {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .tabs {
+    gap: 8px;
+  }
+
+  .tab {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .header-inner {
+    max-width: 100%;
+  }
+}
+
+/* small-screen: we will show a simple menu button in header (component handles DOM) */
