@@ -6,12 +6,6 @@
 
 .header-wrapper {
   width: 100%;
-  padding-left: 200px;
-  /* as requested */
-  padding-right: 200px;
-  /* as requested */
-  padding-top: 20px;
-  padding-bottom: 16px;
   position: fixed;
   /* header overlay on top of hero and stays */
   top: 0;
@@ -162,3 +156,4 @@
 }
 
 /* small-screen: we will show a simple menu button in header (component handles DOM) */
+

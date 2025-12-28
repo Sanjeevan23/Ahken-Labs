@@ -1,5 +1,6 @@
 //components/Button.tsx
 'use client';
+import fonts from '@/constants/fonts';
 import Image, { StaticImageData } from 'next/image';
 
 export interface ButtonProps {
@@ -24,9 +25,9 @@ export default function Button({
       onClick={onClick}
       style={{
         backgroundColor,
-        borderRadius: 16
+        borderRadius: 16,
       }}
-      className={`flex items-center px-[32px] py-[16px] ${className}`}
+      className={`flex items-center px-[32px] py-[14px] ${className}`}
     >
       {/* ICON */}
       <Image
@@ -40,11 +41,11 @@ export default function Button({
       {/* TEXT */}
       <span
         style={{
-          fontSize: 20,
-          fontWeight: 600,
+          fontSize: fonts.size.button_size,
+          fontWeight: fonts.weight.button_weight,
           color: textColor,
           alignSelf: 'center',
-          userSelect: 'none',
+          userSelect: 'none'
         }}
       >
         {text}

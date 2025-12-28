@@ -1,8 +1,8 @@
 // sections/HeroSection.tsx
 import Image from 'next/image';
-import heroImg from '@/assets/images/hero.png';
+import heroImg from '@/assets/images/hero.svg';
 import Button from '@/components/Button';
-import callIcon from '@/assets/icons/call_black.png';
+import callIcon from '@/assets/icons/call_black.svg';
 import colors from '@/constants/colors';
 
 export default function HeroSection() {
@@ -51,7 +51,7 @@ export default function HeroSection() {
               color: colors.white,
               fontSize: 36,
               fontWeight: 600,
-              lineHeight: '1.3',
+              lineHeight: '150%',
               marginBottom: 36,
               maxWidth: 800,
             }}
@@ -67,7 +67,7 @@ export default function HeroSection() {
             icon={callIcon}
             // onClick={() => console.log('button press')}
             className="bg-gradient-to-r from-[#ACFF47] to-[#ABFF5B]"
-            textColor={colors.black}
+            textColor={colors.button_text}
           />
         </div>
       </div>

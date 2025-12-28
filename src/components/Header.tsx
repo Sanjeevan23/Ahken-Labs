@@ -5,14 +5,14 @@ import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import colors from '@/constants/colors';
 import Button from '@/components/Button';
-import logoImg from '@/assets/icons/logo.png';
-import talkIcon from '@/assets/icons/Talk_to_us.png';
+import logoImg from '@/assets/icons/logo.svg';
+import talkIcon from '@/assets/icons/Talk_to_us.svg';
 import useScale from '@/hooks/useScale';
 
 const tabs = [
   { label: 'Home', id: 'home' },
-  { label: 'Services', id: 'ServicesSection' },
-  { label: 'Portfolio', id: 'PortfolioSection' },
+  { label: 'Services', id: 'Services' },
+  { label: 'Portfolio', id: 'Portfolio' },
   { label: 'About us', id: 'about' },
 ];
 
@@ -143,7 +143,7 @@ export default function Header() {
           icon={talkIcon}
           onClick={() => scrollTo('contact')}
           backgroundColor={colors.white}
-          textColor={colors.black}
+          textColor={colors.button_text}
         />
       </div>
     </div>
