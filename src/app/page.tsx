@@ -4,23 +4,23 @@ import ServicesSection from '@/sections/ServicesSection';
 import PortfolioSection from '@/sections/PortfolioSection';
 import AboutSection from '@/sections/AboutSection';
 import ContactSection from '@/sections/ContactSection';
-// import Header from '@/components/Header';
+import HomeStatsSection from '@/sections/HomeStatsSection';
+import Footer from '@/components/Footer';
 
 export default function HomePage() {
   return (
     <>
-      {/* <Header /> */}
-
       <main>
         <section id="home">
           <HeroSection />
+          <HomeStatsSection />
         </section>
 
-        <section id="ServicesSection">
+        <section id="Services">
           <ServicesSection />
         </section>
 
-        <section id="PortfolioSection">
+        <section id="Portfolio">
           <PortfolioSection />
         </section>
 
@@ -31,6 +31,7 @@ export default function HomePage() {
         <section id="contact">
           <ContactSection />
         </section>
+          <Footer />
       </main>
     </>
   );

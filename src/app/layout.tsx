@@ -1,3 +1,4 @@
+//app/services/layout.tsx
 import './globals.css';
 import Header from '@/components/Header';
 
@@ -8,7 +9,7 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html>
       <body>
         {/* Header overlay (fixed) */}
         <Header />
