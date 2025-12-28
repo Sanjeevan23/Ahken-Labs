@@ -14,6 +14,7 @@ import tripadvisorIcon from '@/assets/icons/tripadvisor.svg';
 import footerPeople from '@/assets/images/footer_people_group.svg';
 
 import { siteInfo, socialLinks, footerLinks } from '@/api/footerData';
+import useScale from '@/hooks/useScale';
 
 const iconMap: Record<string, StaticImageData> = {
     facebook: facebookIcon,
@@ -30,10 +31,22 @@ export default function Footer() {
         });
     };
 
+    const scale = useScale();
+
     return (
         <footer className="relative w-full">
             {/* ================= CTA OVERLAY SECTION ================= */}
-            <div className="absolute left-1/2 -translate-x-1/2 -top-[114px] w-full px-[200px]">
+            <div
+                style={{
+                    position: 'absolute',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    top: '-114px',
+                    width: '100%',
+                    paddingLeft: 200 * scale,
+                    paddingRight: 200 * scale,
+                }}
+            >
                 <div className="rounded-[40px] 
                 bg-[linear-gradient(90deg,#5577E0_0%,#1C1C89_50%)] 
                 flex overflow-hidden">
@@ -51,7 +64,7 @@ export default function Footer() {
 
                     {/* RIGHT CONTENT */}
                     <div className="w-1/2 p-10 flex flex-col justify-between">
-                        <p className="text-white text-[18px] font-semibold leading-[140%]">
+                        <p className="text-white text-[20px] font-semibold leading-[140%]">
                             Not sure where to start? Talk to us for free, we’ll guide you with the right solutions for your business.
                         </p>
                         <div style={{ marginTop: 24 }}>
