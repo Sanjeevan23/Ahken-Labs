@@ -84,7 +84,7 @@ export default function Footer() {
                 className="w-full 
                 bg-[radial-gradient(120%_80%_at_50%_0%,rgba(36,66,155,0.35)_0%,rgba(6,15,54,0.9)_55%,#060F36_100%),linear-gradient(180deg,#24429A,#060F36)]"
             >
-                <div className="pt-[164px] mx-[200px]">
+                <div  style={{marginRight: 200 * scale, marginLeft: 200 * scale}} className="pt-[164px]">
                     <div className="flex justify-between text-white">
 
                         {/* LEFT SECTION */}
@@ -123,7 +123,7 @@ export default function Footer() {
                         </div>
 
                         {/* MIDDLE LINKS */}
-                        <div className="space-y-2">
+                        <div className="space-y-2 ml-40">
                             {footerLinks.main.map(link => (
                                 <button
                                     key={link.id}
