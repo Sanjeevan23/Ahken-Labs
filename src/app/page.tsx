@@ -31,7 +31,7 @@ export default function HomePage() {
         <section id="contact">
           <ContactSection />
         </section>
-          <Footer />
+        <Footer />
       </main>
     </>
   );

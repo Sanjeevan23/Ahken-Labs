@@ -29,28 +29,61 @@ export default function Header() {
     });
   };
 
-  /* ---------- SCROLL SPY ---------- */
+  // /* ---------- SCROLL SPY ---------- */
+  const activeRef = useRef(activeTab);
+  useEffect(() => { activeRef.current = activeTab; }, [activeTab]);
+
+  /* ---------- SCROLL SPY (rAF + distance to top) ---------- */
   useEffect(() => {
-    const sections = tabs.map(t => document.getElementById(t.id)).filter(Boolean);
+    let ticking = false;
 
-    const observer = new IntersectionObserver(
-      entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            setActiveTab(entry.target.id);
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+
+      requestAnimationFrame(() => {
+        const headerEl = document.getElementById('site-header');
+        const headerHeight = headerEl ? headerEl.offsetHeight : 80;
+
+        let closestId: string | null = null;
+        let minDist = Number.POSITIVE_INFINITY;
+
+        for (const t of tabs) {
+          const el = document.getElementById(t.id);
+          if (!el) continue;
+          // distance of element top from header-bottom (positive/negative)
+          const rectTop = el.getBoundingClientRect().top - headerHeight;
+          const dist = Math.abs(rectTop);
+          if (dist < minDist) {
+            minDist = dist;
+            closestId = t.id;
           }
-        });
-      },
-      { threshold: 0.6 }
-    );
+        }
 
-    sections.forEach(section => observer.observe(section!));
-    return () => observer.disconnect();
+        if (closestId && closestId !== activeRef.current) {
+          setActiveTab(closestId);
+        }
+
+        ticking = false;
+      });
+    };
+
+    // run once to set initial state
+    onScroll();
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
   }, []);
 
   return (
     /* HEADER GROUP */
     <div
+      id="site-header"
       className="fixed top-0 left-0 w-full z-50"
       style={{
         paddingLeft: 200 * scale,
@@ -111,7 +144,10 @@ export default function Header() {
           {tabs.map(tab => (
             <div
               key={tab.id}
-              onClick={() => scrollTo(tab.id)}
+              onClick={() => {
+                scrollTo(tab.id);
+                setActiveTab(tab.id);
+              }}
               style={{
                 paddingTop: 12,
                 paddingBottom: 12,

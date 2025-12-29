@@ -64,7 +64,7 @@ export default function Footer() {
 
                     {/* RIGHT CONTENT */}
                     <div className="w-1/2 p-10 flex flex-col justify-between">
-                        <p className="text-white text-[20px] font-semibold leading-[140%]">
+                        <p style={{ fontSize: 24 * scale }} className="text-white font-semibold leading-[140%]">
                             Not sure where to start? Talk to us for free, we’ll guide you with the right solutions for your business.
                         </p>
                         <div style={{ marginTop: 24 }}>
@@ -84,7 +84,7 @@ export default function Footer() {
                 className="w-full 
                 bg-[radial-gradient(120%_80%_at_50%_0%,rgba(36,66,155,0.35)_0%,rgba(6,15,54,0.9)_55%,#060F36_100%),linear-gradient(180deg,#24429A,#060F36)]"
             >
-                <div  style={{marginRight: 200 * scale, marginLeft: 200 * scale}} className="pt-[164px]">
+                <div style={{ marginRight: 200 * scale, marginLeft: 200 * scale }} className="pt-[164px]">
                     <div className="flex justify-between text-white">
 
                         {/* LEFT SECTION */}

@@ -155,5 +155,15 @@
   }
 }
 
-/* small-screen: we will show a simple menu button in header (component handles DOM) */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
 
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+section[id] {
+  scroll-margin-top: 100px;
+}

@@ -1,6 +1,7 @@
 //components/Button.tsx
 'use client';
 import fonts from '@/constants/fonts';
+import useScale from '@/hooks/useScale';
 import Image, { StaticImageData } from 'next/image';
 
 export interface ButtonProps {
@@ -20,12 +21,17 @@ export default function Button({
   textColor = '#000000',
   className = '',
 }: ButtonProps) {
+  const scale = useScale();
   return (
     <button
       onClick={onClick}
       style={{
         backgroundColor,
         borderRadius: 16,
+        paddingTop: 16,
+        paddingBottom: 16,
+        paddingLeft: 32 * scale,
+        paddingRight: 32 * scale
       }}
       className={`flex items-center px-[32px] py-[14px] ${className}`}
     >
@@ -41,7 +47,7 @@ export default function Button({
       {/* TEXT */}
       <span
         style={{
-          fontSize: fonts.size.button_size,
+          fontSize: 20,
           fontWeight: fonts.weight.button_weight,
           color: textColor,
           alignSelf: 'center',
