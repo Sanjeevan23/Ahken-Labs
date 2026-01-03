@@ -1,6 +1,6 @@
 //app/services/layout.tsx
 import './globals.css';
-import Header from '@/components/Header';
+import Header from '@/components/Header/Header';
 
 export const metadata = {
   title: 'Ahken Labs',

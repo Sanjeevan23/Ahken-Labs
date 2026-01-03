@@ -3,6 +3,8 @@
 /* const base = typeof window !== "undefined"
    ? window.innerWidth / 1920
    : 1;*/
+
+//src/hooks/useScale.ts
 import { useEffect, useState } from "react";
 
 const DESIGN_WIDTH = 1920;
