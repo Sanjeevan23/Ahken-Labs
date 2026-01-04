@@ -30,7 +30,7 @@ export default function HomePage() {
         <section id="Footer">
           <Footer />
         </section>
-        
+
       </main>
     </>
   );

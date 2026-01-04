@@ -104,6 +104,7 @@ export default function Header() {
           paddingBottom: 16,
           backdropFilter: 'blur(20px)',
           background: '#11111103',
+          // transition: 'padding 80ms ease',
         }}
       >
         {/* HEADER CONTAINER */}

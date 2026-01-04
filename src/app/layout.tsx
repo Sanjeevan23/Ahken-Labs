@@ -1,6 +1,7 @@
 //app/services/layout.tsx
 import './globals.css';
 import Header from '@/components/Header/Header';
+import LoadingOverlay from '@/components/LoadingOverlay';
 
 export const metadata = {
   title: 'Ahken Labs',
@@ -12,10 +13,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html
     >
       <body>
-        {/* Header overlay (fixed) */}
+        <LoadingOverlay />
         <Header />
-
-        {/* page content (hero is expected to be first child so it sits under header) */}
         <main>{children}</main>
       </body>
     </html>
