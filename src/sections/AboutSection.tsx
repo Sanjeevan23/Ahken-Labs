@@ -7,12 +7,14 @@ import colors from '@/constants/colors';
 import useScale from '@/hooks/useScale';
 import { openWhatsApp } from '@/utils/whatsapp';
 import FAQSection from '@/components/Aboutus/FAQSection';
+import useResponsivePadding from '@/hooks/useResponsivePadding';
 
 export default function AboutSection() {
     const sectionRef = useRef<HTMLElement>(null);
     const videoRef = useRef<HTMLVideoElement>(null);
     const [isManuallyPaused, setIsManuallyPaused] = useState(false);
     const scale = useScale();
+    const { isDesktop, isTablet, paddingLR, isMobile } = useResponsivePadding();
 
     /* ---------- PLAY VIDEO ONLY WHEN SECTION IS VISIBLE ---------- */
     useEffect(() => {
@@ -51,16 +53,20 @@ export default function AboutSection() {
         }
     };
 
+    const sectionPaddingTop = isDesktop ? 80 : 64;
+    const ctaButtonTextSize = isMobile || isTablet ? 14 : undefined;
+    const ctaButtonIconSize = isMobile || isTablet ? 14 : undefined;
+
     return (
         <section id="about" ref={sectionRef}>
             {/* VIDEO BOX */}
             <div
                 style={{
-                    marginLeft: 200 * scale,
-                    marginRight: 200 * scale,
-                    height: 668 * scale,
-                    borderRadius: 40,
-                    marginTop: 104,
+                    marginLeft: isDesktop ? paddingLR : 20,
+                    marginRight: isDesktop ? paddingLR : 20,
+                    height: isDesktop ? 500 : isTablet ? 368 : 340,
+                    borderRadius: isDesktop ? 40 : isTablet ? 40 : 24,
+                    marginTop: sectionPaddingTop,
                     overflow: 'hidden',
                     position: 'relative',
                 }}
@@ -69,7 +75,7 @@ export default function AboutSection() {
                 <video
                     ref={videoRef}
                     src="/videos/about_video.mp4"
-                    //    muted
+                    muted
                     loop
                     playsInline
                     onClick={handleVideoClick}
@@ -85,19 +91,19 @@ export default function AboutSection() {
                 <div
                     style={{
                         position: 'absolute',
-                        top: 164 * scale,
-                        left: 80 * scale,
+                        top: "20%",
+                        left: isMobile? "13%": 80 * scale,
                         background: '#FFFFFF66',
-                        backdropFilter: 'blur(20px)',
+                        backdropFilter: isMobile? 'blur(10px)': 'blur(20px)',
                         boxShadow: '0px 0px 16px 0px #00000014',
-                        borderRadius: 24,
-                        padding: 40 * scale,
-                        maxWidth: 680 * scale,
+                        borderRadius: isMobile? 14 :24,
+                        padding: isMobile? 12: 40 * scale,
+                        maxWidth: isDesktop? 510 : isTablet? 500 : '75%',
                     }}
                 >
                     <h3
                         style={{
-                            fontSize: 32 * scale,
+                            fontSize: isDesktop ? 32 : isTablet ? 24 : 18,
                             fontWeight: 700,
                             color: '#111111',
                         }}
@@ -107,11 +113,11 @@ export default function AboutSection() {
 
                     <p
                         style={{
-                            marginTop: 20 * scale,
-                            marginBottom: 40,
-                            fontSize: 20 * scale,
+                            marginTop: isDesktop ? 20 : isTablet ? 16 : 12,
+                            marginBottom: isDesktop ? 40 : isTablet ? 24 : 16,
+                            fontSize: isDesktop ? 20 : isTablet ? 18 : 13,
                             fontWeight: 400,
-                            color: '#111111',
+                            color: '#0e022bff',
                         }}
                     >
                         We deliver smart, creative digital solutions built around your
@@ -125,6 +131,8 @@ export default function AboutSection() {
                         className="bg-gradient-to-r from-[#ACFF47] to-[#ABFF5B]"
                         textColor={colors.button_text}
                         onClick={() => openWhatsApp('Hi there...')}
+                        textSize={ctaButtonTextSize}
+                        iconSize={ctaButtonIconSize}
                     />
                 </div>
             </div>

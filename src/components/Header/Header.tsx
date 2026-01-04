@@ -1,4 +1,4 @@
-//src/components/Header/Header.tsx
+// src/components/Header/Header.tsx
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
@@ -10,6 +10,7 @@ import talkIcon from '@/assets/icons/Talk_to_us.svg';
 import hamburgerIcon from '@/assets/icons/hamburger.svg';
 import useScale from '@/hooks/useScale';
 import HeaderMenuOverlay from './HeaderMenuOverlay';
+import useResponsivePadding from '@/hooks/useResponsivePadding'; // <-- added
 
 const tabs = [
   { label: 'Home', id: 'home' },
@@ -18,16 +19,13 @@ const tabs = [
   { label: 'About us', id: 'about' },
 ];
 
-const MIN_CONTAINER_WIDTH = 1080;
-const MAX_PADDING = 200;
-const MIN_PADDING_DESKTOP = 40;
-const MOBILE_PADDING = 24;
+// keep this constant to match behavior in previous code (hard hamburger activation breakpoint)
+const HAMBURGER_BREAKPOINT = 1160;
 
 export default function Header() {
   const scale = useScale();
   const [activeTab, setActiveTab] = useState('home');
   const [menuOpen, setMenuOpen] = useState(false);
-  const [useHamburger, setUseHamburger] = useState(false);
 
   const activeRef = useRef(activeTab);
   useEffect(() => {
@@ -43,40 +41,12 @@ export default function Header() {
     });
   };
 
-  /* ---------- RESPONSIVE LAYOUT CALC ---------- */
-  const [paddingLR, setPaddingLR] = useState(MAX_PADDING);
+  /* ---------- RESPONSIVE LAYOUT (use hook) ---------- */
+  // Use the hook (same scale you used previously)
+  const { paddingLR, screenWidth } = useResponsivePadding(scale);
 
-  useEffect(() => {
-    const updateLayout = () => {
-      const screenWidth = window.innerWidth;
-
-      // HARD BREAKPOINT (ONLY place hamburger activates)
-      if (screenWidth < 1160) {
-        setUseHamburger(true);
-        setPaddingLR(MOBILE_PADDING);
-        return;
-      }
-      setUseHamburger(false);
-      /**
-       * Screen >= 1160
-       * Container MUST stay 1080
-       * Padding absorbs resize but never < 40
-       */
-      const availablePadding = (screenWidth - MIN_CONTAINER_WIDTH) / 2;
-
-      const clampedPadding = Math.max(
-        MIN_PADDING_DESKTOP,
-        Math.min(MAX_PADDING * scale, availablePadding)
-      );
-
-      setPaddingLR(Math.round(clampedPadding));
-    };
-
-    updateLayout();
-    window.addEventListener('resize', updateLayout);
-    return () => window.removeEventListener('resize', updateLayout);
-  }, [scale]);
-
+  // Derive the hamburger boolean the same way your previous effect did
+  const useHamburger = screenWidth < HAMBURGER_BREAKPOINT;
 
   /* ---------- SCROLL SPY ---------- */
   useEffect(() => {

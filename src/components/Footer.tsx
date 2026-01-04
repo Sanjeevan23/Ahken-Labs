@@ -11,10 +11,10 @@ import logoImg from '@/assets/icons/logo.svg';
 import facebookIcon from '@/assets/icons/facebook.svg';
 import instagramIcon from '@/assets/icons/instagram.svg';
 import twitterIcon from '@/assets/icons/twitter.svg';
-import tripadvisorIcon from '@/assets/icons/tripadvisor.svg';
+import LinkedIn from '@/assets/icons/LinkedIn.svg';
 
 import footerPeople from '@/assets/images/footer_people_group.svg';
-import footerPeopleMobile from '@/assets/images/footer_people_group_mobile.svg';
+import footerPeopleMobile from '@/assets/images/footer_people_group_mobile.png';
 import footerPeopleTablet from '@/assets/images/footer_people_group_tablet.svg';
 
 import { siteInfo, socialLinks, footerLinks } from '@/api/footerData';
@@ -26,7 +26,7 @@ const iconMap: Record<string, StaticImageData> = {
     facebook: facebookIcon,
     instagram: instagramIcon,
     twitter: twitterIcon,
-    tripadvisor: tripadvisorIcon,
+    LinkedIn: LinkedIn,
 };
 
 export default function Footer() {
@@ -70,7 +70,7 @@ export default function Footer() {
                     position: 'absolute',
                     left: '50%',
                     transform: 'translateX(-50%)',
-                    top: -114,
+                    top: isDesktop ? -114 : isTablet ? -100 : -100,
                     width: '100%',
                     paddingLeft: paddingLR,
                     paddingRight: paddingLR,
@@ -164,7 +164,7 @@ export default function Footer() {
             <div
                 className="w-full"
                 style={{
-                    marginTop: isMobile ? 96 : 160,
+                    marginTop: isMobile ? 150 : 160,
                     background:
                         'radial-gradient(120% 80% at 50% 0%, rgba(36,66,155,0.35) 0%, rgba(6,15,54,0.9) 55%, #060F36 100%), linear-gradient(180deg,#24429A,#060F36)',
                 }}
@@ -172,7 +172,7 @@ export default function Footer() {
                 <div
                     style={{
                         ...horizontalMarginStyle,
-                        paddingTop: isMobile ? 80 : 164,
+                        paddingTop: isMobile ? 130 : 164,
                     }}
                 >
 

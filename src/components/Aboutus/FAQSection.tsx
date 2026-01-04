@@ -4,23 +4,27 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { faqData } from '@/api/faqData';
 import downArrow from '@/assets/icons/down_arrow.svg';
-import useScale from '@/hooks/useScale';
+import useResponsivePadding from '@/hooks/useResponsivePadding';
 
 export default function FAQSection() {
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
-    const scale = useScale();
+    const { isDesktop, paddingLR, isTablet } = useResponsivePadding();
+
+    const sectionPaddingTop = isDesktop ? 64 : 40;
+    const titlebottom = isDesktop ? 40 : 30;
+    const sectionTitleSize = isDesktop ? 40 : isTablet ? 28 : 20;
 
     const toggleFAQ = (index: number) => {
         setActiveIndex(activeIndex === index ? null : index);
     };
 
     return (
-        <section style={{ marginTop: 104 * scale }}>
+        <section style={{ marginTop: sectionPaddingTop }}>
             {/* HEADING */}
             <h2
                 style={{
                     fontWeight: 700,
-                    fontSize: 40 * scale,
+                    fontSize: sectionTitleSize,
                     color: '#111111',
                     textAlign: 'center',
                 }}
@@ -31,10 +35,12 @@ export default function FAQSection() {
             {/* QA SECTION */}
             <div
                 style={{
-                    marginTop: 32 * scale,
+                    marginTop: titlebottom,
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
+                    marginLeft: isDesktop ? paddingLR : 0,
+                    marginRight: isDesktop ? paddingLR : 0,
                 }}
             >
                 {faqData.map((faq, index) => {
@@ -44,10 +50,10 @@ export default function FAQSection() {
                         <div
                             key={index}
                             style={{
-                                width: 1120 * scale,
+                                width: "80%",
                                 borderTop: '1px solid #E6E6E6',
-                                paddingTop: 20 * scale,
-                                paddingBottom: 20 * scale,
+                                paddingTop: isDesktop ? 20 : isTablet ? 18 : 16,
+                                paddingBottom: isDesktop ? 20 : isTablet ? 18 : 16,
                                 cursor: 'pointer',
                             }}
                             onClick={() => toggleFAQ(index)}
@@ -63,7 +69,7 @@ export default function FAQSection() {
                                 <p
                                     style={{
                                         fontWeight: 400,
-                                        fontSize: 20 * scale,
+                                        fontSize: isDesktop ? 20 : 16,
                                         color: '#242424',
                                     }}
                                 >
@@ -73,8 +79,8 @@ export default function FAQSection() {
                                 <Image
                                     src={downArrow}
                                     alt="arrow"
-                                    width={20 * scale}
-                                    height={20 * scale}
+                                    width={isDesktop ? 20 : 16}
+                                    height={isDesktop ? 20 : 16}
                                     style={{
                                         transform: isOpen ? 'rotate(-180deg)' : 'rotate(0deg)',
                                         transition: 'transform 0.4s ease',
@@ -93,9 +99,9 @@ export default function FAQSection() {
                                 <div style={{ overflow: 'hidden' }}>
                                     <p
                                         style={{
-                                            marginTop: 16 * scale,
+                                            marginTop: isDesktop ? 16 : isTablet ? 14 : 12,
                                             fontWeight: 400,
-                                            fontSize: 16 * scale,
+                                            fontSize: isDesktop ? 16 : 14,
                                             color: '#6A6A6A',
                                         }}
                                     >

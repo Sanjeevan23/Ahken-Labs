@@ -21,9 +21,9 @@ export const socialLinks = [
     icon: 'twitter',
   },
   {
-    name: 'Tripadvisor',
-    href: 'https://www.tripadvisor.com',
-    icon: 'tripadvisor',
+    name: 'LinkedIn',
+    href: 'https://www.LinkedIn.com',
+    icon: 'LinkedIn',
   },
 ];
 

@@ -3,16 +3,30 @@
 import Image from 'next/image';
 import rightArrow from '@/assets/icons/right_arrow.svg';
 import { portfolioData } from '@/api/portfolioData';
-import { useState } from 'react';
-import useScale from '@/hooks/useScale';
-
-const STEP = 6;
+import { useState, useEffect } from 'react';
+import useResponsivePadding from '@/hooks/useResponsivePadding';
 
 export default function PortfolioSection() {
-  const scale = useScale();
-  const [visibleCount, setVisibleCount] = useState(6);
+  const { isDesktop, isTablet, paddingLR } = useResponsivePadding();
+
+  // Determine initial visible count & step based on device
+  const initialVisible = isDesktop || isTablet ? 6 : 4;
+  const STEP = isDesktop || isTablet ? 6 : 4;
+
+  const [visibleCount, setVisibleCount] = useState(initialVisible);
+
+  // reset visibleCount if device changes
+  useEffect(() => {
+    setVisibleCount(initialVisible);
+  }, [initialVisible]);
+
   const visibleProjects = portfolioData.slice(0, visibleCount);
   const isFullyExpanded = visibleCount >= portfolioData.length;
+
+  const sectionPaddingTop = isDesktop ? 64 : 40;
+  const titlebottom = isDesktop ? 40 : 30;
+  const sectionTitleSize = isDesktop ? 40 : isTablet ? 28 : 20;
+  const linksTextSize = isDesktop ? 24 : isTablet ? 22 : 20;
 
   return (
     <section id="Portfolio">
@@ -20,11 +34,11 @@ export default function PortfolioSection() {
       <h2
         className="text-center"
         style={{
-          fontSize: 40,
+          fontSize: sectionTitleSize,
           fontWeight: 700,
           color: '#111111',
-          marginTop: 64 * scale,
-          marginBottom: 40,
+          marginTop: sectionPaddingTop,
+          marginBottom: titlebottom,
         }}
       >
         Some of our projects
@@ -33,78 +47,76 @@ export default function PortfolioSection() {
       {/* PROJECT SECTION */}
       <div
         style={{
-          marginLeft: 200 * scale,
-          marginRight: 200 * scale,
+          marginLeft: isDesktop ? paddingLR : 20,
+          marginRight: isDesktop ? paddingLR : 20,
         }}
       >
         <div
-          className="grid grid-cols-2"
+          className="grid gap-y-16 gap-x-6"
           style={{
+            gridTemplateColumns: isDesktop || isTablet
+              ? 'repeat(2, minmax(0, 1fr))'
+              : 'repeat(1, minmax(0, 1fr))',
             columnGap: 24,
-            rowGap: 64,
+            rowGap: isDesktop ? 64 : isTablet ? 50 : 40,
           }}
         >
           {visibleProjects.map(project => (
-            <div key={project.id}>
+            <div key={project.id} className="w-full">
               {/* IMAGE */}
-              <div className="relative">
+              <div className="relative w-full">
                 <Image
                   src={project.image}
                   alt={project.name}
-                  width={748 * scale}
-                  height={748}
-                  className="rounded-[24px]"
+                  width={0}
+                  height={0}
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className="w-full h-auto rounded-[24px] object-cover"
                 />
-
-                {/* LEFT ARROW GROUP */}
+                {/* ARROW LINK */}
                 <a
                   href={project.link}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="absolute top-4 left-4 flex items-center"
                   style={{
-                    padding: '12px 20px 9px 24px',
                     background: '#FFFFFF',
                     borderRadius: 40,
+                    paddingLeft: 24,
+                    paddingRight: 20,
+                    paddingTop: isDesktop ? 12 : isTablet ? 12 : 10,
+                    paddingBottom: isDesktop ? 9 : isTablet ? 9 : 7,
                   }}
                 >
                   <span
                     style={{
-                      fontSize: 24,
+                      fontSize: linksTextSize,
                       fontWeight: 600,
                       color: '#111111',
                       marginRight: 4,
-                      paddingBottom: 6
+                      paddingBottom: 6,
                     }}
                   >
                     {project.name}
                   </span>
-                  <Image src={rightArrow} alt="arrow" width={24} height={24} />
+                  <Image
+                    src={rightArrow}
+                    alt="arrow"
+                    width={linksTextSize}
+                    height={linksTextSize}
+                  />
                 </a>
               </div>
 
               {/* BOTTOM TEXT */}
-              <div
-                style={{
-                  marginTop: 24,
-                  paddingLeft: 8,
-                  paddingRight: 8,
-                }}
-              >
-                <p
-                  style={{
-                    fontSize: 24,
-                    fontWeight: 600,
-                    color: '#262347',
-                  }}
-                >
+              <div style={{ marginTop: 24, paddingLeft: 8, paddingRight: 8 }}>
+                <p style={{ fontSize: linksTextSize, fontWeight: 600, color: '#262347' }}>
                   {project.title}
                 </p>
-
                 <p
                   style={{
-                    marginTop: 16,
-                    fontSize: 20,
+                    marginTop: isDesktop ? 16 : isTablet ? 14 : 12,
+                    fontSize: isDesktop ? 20 : isTablet ? 18 : 16,
                     fontWeight: 400,
                     color: '#262347',
                   }}
@@ -116,22 +128,23 @@ export default function PortfolioSection() {
           ))}
         </div>
 
+
         {/* SEE ALL BUTTON */}
-        {portfolioData.length > 6 && (
-          <div className="flex justify-center mt-10">
+        {portfolioData.length > initialVisible && (
+          <div className="flex justify-center" style={{ marginTop: isDesktop ? 40 : isTablet ? 35 : 30 }}>
             <button
               onClick={() => {
                 if (isFullyExpanded) {
-                  setVisibleCount(6);
+                  setVisibleCount(initialVisible);
                 } else {
-                  setVisibleCount(prev => prev + STEP);
+                  setVisibleCount(prev => Math.min(prev + STEP, portfolioData.length));
                 }
               }}
               className="flex items-center"
               style={{
                 background: '#F7F7F7',
-                paddingTop: 19,
-                paddingBottom: 15,
+                paddingTop: isDesktop ? 19 : isTablet ? 18 : 16,
+                paddingBottom: isDesktop ? 15 : isTablet ? 14 : 12,
                 paddingLeft: 32,
                 paddingRight: 32,
                 borderRadius: 16,
@@ -139,7 +152,7 @@ export default function PortfolioSection() {
             >
               <span
                 style={{
-                  fontSize: 20,
+                  fontSize: isDesktop ? 20 : isTablet ? 18 : 16,
                   fontWeight: 600,
                   color: '#111111',
                   marginRight: 4,
@@ -152,8 +165,8 @@ export default function PortfolioSection() {
               <Image
                 src={rightArrow}
                 alt="arrow"
-                width={24}
-                height={24}
+                width={isDesktop ? 20 : isTablet ? 18 : 16}
+                height={isDesktop ? 20 : isTablet ? 18 : 16}
                 style={{
                   transform: isFullyExpanded ? 'rotate(180deg)' : 'none',
                   transition: 'transform 0.2s ease',
@@ -162,7 +175,6 @@ export default function PortfolioSection() {
             </button>
           </div>
         )}
-
       </div>
     </section>
   );
