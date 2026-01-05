@@ -59,11 +59,11 @@ export default function HeaderMenuOverlay({
         aria-modal="true"
         className={`
           fixed top-0 right-0 z-[70]
-          h-screen w-[280px] max-w-[85%]
+          h-[100dvh] w-[280px] max-w-[85%]
           flex flex-col box-border
           p-6
           rounded-l-xl
-          backdrop-blur-[100px]
+          backdrop-blur-[10px]
           bg-white/40
           shadow-[0_0_16px_#00000014]
           transition-transform duration-[420ms] ease-[cubic-bezier(.2,.9,.2,1)]

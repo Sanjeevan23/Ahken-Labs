@@ -5,15 +5,52 @@ import CeylonTea from '@/assets/images/Ceylon_tea.svg';
 import LimatWorld from '@/assets/images/Limat_World.svg';
 import GrandmasSecret from '@/assets/images/Grandmas_Secret.svg';
 
+import XeniaFrame1 from '@/assets/images/xeniaFrame01.png';
+import XeniaFrame2 from '@/assets/images/xeniaFrame02.png';
+import XeniaFrame3 from '@/assets/images/xeniaFrame03.png';
+import XeniaFrame4 from '@/assets/images/xeniaFrame04.png';
+import XeniaFrame5 from '@/assets/images/xeniaFrame05.png';
+import XeniaFrame6 from '@/assets/images/xeniaFrame06.png';
+import XeniaFrame7 from '@/assets/images/xeniaFrame07.png';
+import XeniaFrame8 from '@/assets/images/xeniaFrame08.png';
+import XeniaFrame9 from '@/assets/images/xeniaFrame09.png';
+import XeniaFrame10 from '@/assets/images/xeniaFrame10.png';
+
+import Landingpage1 from '@/assets/images/Landingpage01.png';
+import Landingpage2 from '@/assets/images/Landingpage02.png';
+import Landingpage3 from '@/assets/images/Landingpage03.png';
+import Landingpage4 from '@/assets/images/Landingpage04.png';
+import Landingpage5 from '@/assets/images/Landingpage05.png';
+
+import Admindashboard1 from '@/assets/images/Admindashboard01.png';
+import Admindashboard2 from '@/assets/images/Admindashboard02.png';
+import Admindashboard3 from '@/assets/images/Admindashboard03.png';
+import Admindashboard4 from '@/assets/images/Admindashboard04.png';
+import Admindashboard5 from '@/assets/images/Admindashboard05.png';
+import Admindashboard6 from '@/assets/images/Admindashboard06.png';
+import Admindashboard7 from '@/assets/images/Admindashboard07.png';
+
 export const portfolioData = [
   {
     id: 'portfolio-1',
-    image: Xenia,
     name: 'Xenia',
+    image: Xenia,
     title: 'Landing page',
     description:
       'Designed a clean, intuitive landing page for Xenia-a platform that enhances team communication, compliance, and workflow efficiency through personalized content and smart tools.',
-    link: 'https://www.youtube.com/watch?v=7Qs9tGkUvno',
+    type: 'ui',
+    frames: [
+      XeniaFrame1,
+      XeniaFrame2,
+      XeniaFrame3,
+      XeniaFrame4,
+      XeniaFrame5,
+      XeniaFrame6,
+      XeniaFrame7,
+      XeniaFrame8,
+      XeniaFrame9,
+      XeniaFrame10,
+    ],
   },
   {
     id: 'portfolio-2',
@@ -22,7 +59,14 @@ export const portfolioData = [
     title: 'Landing page & platform',
     description:
       'Created a modern interface for a new-age platform that connects surveyors and users, replacing traditional survey processes with a seamless digital experience.',
-    link: 'https://www.youtube.com/watch?v=7Qs9tGkUvno',
+    type: 'ui',
+    frames: [
+      Landingpage1,
+      Landingpage2,
+      Landingpage3,
+      Landingpage4,
+      Landingpage5
+    ],
   },
   {
     id: 'portfolio-3',
@@ -31,7 +75,16 @@ export const portfolioData = [
     title: 'Admin dashboard',
     description:
       'Designed an MVP dashboard featuring efficient controls, data visualization, and management tools-empowering administrators to run the platform smoothly and effectively.',
-    link: 'https://xenia.com',
+    type: 'ui',
+    frames: [
+      Admindashboard1,
+      Admindashboard2,
+      Admindashboard3,
+      Admindashboard4,
+      Admindashboard5,
+      Admindashboard6,
+      Admindashboard7,
+    ],
   },
   {
     id: 'portfolio-4',

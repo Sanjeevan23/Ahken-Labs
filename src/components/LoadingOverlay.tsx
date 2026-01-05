@@ -5,9 +5,9 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import logoImg from '@/assets/icons/logo.svg';
 
-const MIN_VISIBLE_MS = 100;
-const FADE_DURATION_MS = 100;
-const MAX_WAIT_MS = 200;
+const MIN_VISIBLE_MS = 200;
+const FADE_DURATION_MS = 200;
+const MAX_WAIT_MS = 600;
 
 const LOADING_MESSAGES = [
   'Boiling the database ☕',
@@ -21,13 +21,11 @@ export default function LoadingOverlay() {
   const [visible, setVisible] = useState(true);
   const [hiding, setHiding] = useState(false);
 
-  // initialize randomly once (lazy init) to avoid calling setState inside an effect
   const [messageIndex, setMessageIndex] = useState<number>(() =>
     LOADING_MESSAGES.length > 1 ? Math.floor(Math.random() * LOADING_MESSAGES.length) : 0
   );
 
   useEffect(() => {
-    // rotate to a different random message every 700ms
     const intervalId = window.setInterval(() => {
       setMessageIndex((prev) => {
         if (LOADING_MESSAGES.length <= 1) return prev;
@@ -48,7 +46,6 @@ export default function LoadingOverlay() {
     let timeoutId: number | null = null;
     const cleanupFns: Array<() => void> = [];
 
-    // wait for window 'load' (full load) or resolve immediately if already complete
     const waitForWindowLoad = () =>
       new Promise<void>((res) => {
         if (document.readyState === 'complete') {
@@ -60,7 +57,6 @@ export default function LoadingOverlay() {
         cleanupFns.push(() => window.removeEventListener('load', onLoad));
       });
 
-    // typed access to document.fonts to avoid using `any`
     const waitForFonts = () => {
       const doc = document as unknown as { fonts?: { ready?: Promise<void> } };
       const fonts = doc.fonts;
@@ -70,11 +66,9 @@ export default function LoadingOverlay() {
       return Promise.resolve();
     };
 
-    // wait for each image in document.images
     const whenImgReady = (img: HTMLImageElement) =>
       new Promise<void>((res) => {
         if (img.complete) {
-          // either loaded or error already
           res();
           return;
         }
@@ -93,26 +87,21 @@ export default function LoadingOverlay() {
       return Promise.all(imgs.map(whenImgReady));
     };
 
-    // Core wait: window load + fonts + images
     const allResourcesPromise = Promise.all([waitForWindowLoad(), waitForFonts(), waitForImages()]);
 
-    // Timeout fallback so loader never stays forever
     const timeoutPromise = new Promise<void>((res) => {
       timeoutId = window.setTimeout(() => res(), MAX_WAIT_MS);
     });
 
-    // Race: either all resources done OR we hit the max wait
     Promise.race([allResourcesPromise, timeoutPromise])
       .then(() => {
         if (!mounted) return;
         const elapsed = performance.now() - start;
         const wait = Math.max(0, MIN_VISIBLE_MS - elapsed);
 
-        // ensure minimum visible time, then fade out
         window.setTimeout(() => {
           if (!mounted) return;
           setHiding(true);
-          // remove DOM node after fade completes
           window.setTimeout(() => {
             if (!mounted) return;
             setVisible(false);
@@ -120,13 +109,11 @@ export default function LoadingOverlay() {
         }, wait);
       })
       .catch(() => {
-        // on any unexpected error, hide gracefully
         if (!mounted) return;
         setHiding(true);
         window.setTimeout(() => setVisible(false), FADE_DURATION_MS);
       })
       .finally(() => {
-        // cleanup timeout if still running
         if (timeoutId) {
           clearTimeout(timeoutId);
         }
@@ -150,21 +137,30 @@ export default function LoadingOverlay() {
       aria-label="Loading"
       style={{
         position: 'fixed',
-        inset: 0,
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        // dynamic viewport height for mobile (dvh) + fallback
+        height: '100dvh',
+        minHeight: '100vh',
         zIndex: 9999,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
+        // use grid + placeItems for very stable centering
+        display: 'grid',
+        placeItems: 'center',
         background: 'rgba(6, 15, 54, 0.45)',
         backdropFilter: 'blur(14px) saturate(140%)',
         WebkitBackdropFilter: 'blur(14px) saturate(140%)',
         transition: `opacity ${FADE_DURATION_MS}ms ease`,
         pointerEvents: hiding ? 'none' : 'auto',
         opacity: hiding ? 0 : 1,
+        boxSizing: 'border-box',
+        // safe-area insets for notched devices (iOS)
+        paddingTop: 'env(safe-area-inset-top)',
+        paddingBottom: 'env(safe-area-inset-bottom)',
       }}
     >
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 18 }}>
-        {/* WELCOME TEXT */}
         <div
           style={{
             fontSize: 24,
@@ -193,12 +189,24 @@ export default function LoadingOverlay() {
             backdropFilter: 'blur(10px)',
             WebkitBackdropFilter: 'blur(10px)',
             border: '1px solid rgba(255,255,255,0.18)',
-            boxShadow: `0 8px 32px rgba(15, 23, 42, 0.35), 
-      inset 0 1px 0 rgba(255,255,255,0.25)`,
-            animation: 'loaderRing 1400ms cubic-bezier(.2,.9,.3,1) infinite, float 2400ms ease-in-out infinite',
+            boxShadow: `0 8px 32px rgba(15, 23, 42, 0.35), inset 0 1px 0 rgba(255,255,255,0.25)`,
+            animation: 'float 2400ms ease-in-out infinite',
+            overflow: 'visible',
           }}
         >
-          <Image src={logoImg} alt="Ahken Labs" width={48} height={48} />
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              transformOrigin: '50% 50%',
+              animation: 'loaderRotate 1400ms linear infinite',
+              animationDirection: 'alternate',
+            }}
+          >
+            <Image src={logoImg} alt="Ahken Labs" width={48} height={48} priority />
+          </div>
+
           <span
             aria-hidden
             style={{
@@ -209,9 +217,8 @@ export default function LoadingOverlay() {
               top: '50%',
               left: '50%',
               transform: 'translate(-50%, -50%)',
-              boxShadow: ` 0 0 32px rgba(160, 220, 255, 0.25), 
-        0 0 12px rgba(160, 220, 255, 0.15)`,
-              animation: 'loaderPulse 1600ms ease-out infinite',
+              boxShadow: `0 0 32px rgba(160, 220, 255, 0.25), 0 0 12px rgba(160, 220, 255, 0.15)`,
+              animation: 'ringScale 1600ms ease-out infinite',
               pointerEvents: 'none',
             }}
           />
@@ -242,7 +249,7 @@ export default function LoadingOverlay() {
               {LOADING_MESSAGES[messageIndex]}
             </span>
 
-            <span className="loading-dots" aria-hidden>
+            <span className="loading-dots" aria-hidden style={{ opacity: 0.85 }}>
               <span>.</span>
               <span>.</span>
               <span>.</span>
@@ -262,15 +269,14 @@ export default function LoadingOverlay() {
       </div>
 
       <style>{`
-        @keyframes loaderPulse {
-          0% { transform: translate(-50%, -50%) scale(0.85); opacity: 0.35; }
-          50% { transform: translate(-50%, -50%) scale(1.03); opacity: 0.7; }
-          100% { transform: translate(-50%, -50%) scale(0.85); opacity: 0.35; }
+        @keyframes loaderRotate {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
         }
-        @keyframes loaderRing {
-          0% { transform: rotate(0deg); filter: drop-shadow(0 0 0 rgba(0,0,0,0)); }
-          50% { transform: rotate(6deg); filter: drop-shadow(0 8px 24px rgba(0,0,0,0.25)); }
-          100% { transform: rotate(0deg); filter: drop-shadow(0 0 0 rgba(0,0,0,0)); }
+        @keyframes ringScale {
+          0% { transform: translate(-50%, -50%) scale(0.94); }
+          50% { transform: translate(-50%, -50%) scale(1.02); }
+          100% { transform: translate(-50%, -50%) scale(0.94); }
         }
         @keyframes float {
           0% { transform: translateY(0); }
@@ -278,20 +284,11 @@ export default function LoadingOverlay() {
           100% { transform: translateY(0); }
         }
 
-        /* dots animation */
         .loading-dots span {
           display: inline-block;
           margin-left: 2px;
-          opacity: 0.25;
-          animation: dotBlink 1.4s infinite both;
-        }
-        .loading-dots span:nth-child(2) { animation-delay: 0.18s; }
-        .loading-dots span:nth-child(3) { animation-delay: 0.36s; }
-
-        @keyframes dotBlink {
-          0% { opacity: 0.2; transform: translateY(0); }
-          20% { opacity: 1; transform: translateY(-3px); }
-          100% { opacity: 0.2; transform: translateY(0); }
+          opacity: 0.85;
+          transform: translateY(0);
         }
       `}</style>
     </div>

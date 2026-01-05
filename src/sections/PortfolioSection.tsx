@@ -5,6 +5,7 @@ import rightArrow from '@/assets/icons/right_arrow.svg';
 import { portfolioData } from '@/api/portfolioData';
 import { useState, useEffect } from 'react';
 import useResponsivePadding from '@/hooks/useResponsivePadding';
+import PortfolioUIOverlay from '@/components/portfolio/PortfolioUIOverlay';
 
 export default function PortfolioSection() {
   const { isDesktop, isTablet, paddingLR } = useResponsivePadding();
@@ -20,6 +21,10 @@ export default function PortfolioSection() {
     setVisibleCount(initialVisible);
   }, [initialVisible]);
 
+  const [isDragging, setIsDragging] = useState(false);
+  const dragThreshold = 10; // px
+  let startY = 0;
+
   const visibleProjects = portfolioData.slice(0, visibleCount);
   const isFullyExpanded = visibleCount >= portfolioData.length;
 
@@ -27,6 +32,8 @@ export default function PortfolioSection() {
   const titlebottom = isDesktop ? 40 : 30;
   const sectionTitleSize = isDesktop ? 40 : isTablet ? 28 : 20;
   const linksTextSize = isDesktop ? 24 : isTablet ? 22 : 20;
+  const [uiOpen, setUiOpen] = useState(false);
+  const [activeFrames, setActiveFrames] = useState<any[]>([]);
 
   return (
     <section id="Portfolio">
@@ -64,7 +71,49 @@ export default function PortfolioSection() {
           {visibleProjects.map(project => (
             <div key={project.id} className="w-full">
               {/* IMAGE */}
-              <div className="relative w-full">
+              <div
+                style={{ userSelect: 'none' }}
+                className="relative w-full cursor-pointer"
+                onMouseDown={(e) => {
+                  startY = e.clientY;
+                  setIsDragging(false);
+                }}
+                onMouseMove={(e) => {
+                  if (Math.abs(e.clientY - startY) > dragThreshold) {
+                    setIsDragging(true);
+                  }
+                }}
+                onMouseUp={() => {
+                  if (!isDragging) {
+                    if (project.type === 'ui') {
+                      setActiveFrames(project.frames);
+                      setUiOpen(true);
+                    } else {
+                      window.open(project.link, '_blank');
+                    }
+                  }
+                }}
+                onTouchStart={(e) => {
+                  startY = e.touches[0].clientY;
+                  setIsDragging(false);
+                }}
+                onTouchMove={(e) => {
+                  if (Math.abs(e.touches[0].clientY - startY) > dragThreshold) {
+                    setIsDragging(true);
+                  }
+                }}
+                onTouchEnd={() => {
+                  if (!isDragging) {
+                    if (project.type === 'ui') {
+                      setActiveFrames(project.frames);
+                      setUiOpen(true);
+                    } else {
+                      window.open(project.link, '_blank');
+                    }
+                  }
+                }}
+              >
+
                 <Image
                   src={project.image}
                   alt={project.name}
@@ -176,6 +225,12 @@ export default function PortfolioSection() {
           </div>
         )}
       </div>
+      <PortfolioUIOverlay
+        open={uiOpen}
+        frames={activeFrames}
+        onClose={() => setUiOpen(false)}
+      />
+
     </section>
   );
 }
