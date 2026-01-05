@@ -1,8 +1,9 @@
 'use client';
 
 import Image from 'next/image';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { StaticImageData } from 'next/image';
+import logoImg from '@/assets/icons/logo.svg';
 
 export default function PortfolioUIOverlay({
     open,
@@ -15,6 +16,16 @@ export default function PortfolioUIOverlay({
 }) {
     const startX = useRef(0);
     const startY = useRef(0);
+
+    // track loaded state per frame
+    const [loaded, setLoaded] = useState<boolean[]>(
+        () => Array(frames.length).fill(false)
+    );
+
+    useEffect(() => {
+        // reset loaded when frames change
+        setLoaded(Array(frames.length).fill(false));
+    }, [frames]);
 
     useEffect(() => {
         document.body.style.overflow = open ? 'hidden' : '';
@@ -37,6 +48,15 @@ export default function PortfolioUIOverlay({
         if (Math.abs(dx) > 80 && Math.abs(dx) > Math.abs(dy)) {
             onClose();
         }
+    };
+
+    const markLoaded = (idx: number) => {
+        setLoaded(prev => {
+            if (prev[idx]) return prev;
+            const copy = [...prev];
+            copy[idx] = true;
+            return copy;
+        });
     };
 
     return (
@@ -73,7 +93,6 @@ export default function PortfolioUIOverlay({
                 ×
             </button>
 
-
             {/* CENTERED CONTENT */}
             <div
                 className="
@@ -81,15 +100,70 @@ export default function PortfolioUIOverlay({
                     px-6 md:px-10
                     scale-[0.98] opacity-0 animate-content-in "
                 onClick={e => e.stopPropagation()}
+                style={{ position: 'relative' }}
             >
-                {frames.map((frame, idx) => (
-                    <Image
-                        key={idx}
-                        src={frame}
-                        alt={`frame-${idx}`}
-                        className="w-full h-auto select-none"
-                    />
-                ))}
+                {/* FRAMES: each frame has its own loader centered over it until it loads */}
+                <div className="w-full">
+                    {frames.map((frame, idx) => (
+                        <div key={idx} className="relative w-full">
+                            {/* per-frame loader (absolute center inside wrapper) */}
+                            {!loaded[idx] && (
+                                <div
+                                    className="absolute inset-0 z-[999] flex items-center justify-center"
+                                    aria-hidden
+                                >
+                                    <div
+                                        style={{
+                                            width: 96,
+                                            height: 96,
+                                            borderRadius: 999,
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            position: 'relative',
+                                            background:
+                                                'linear-gradient(145deg, rgba(255,255,255,0.14), rgba(255,255,255,0.04))',
+                                            backdropFilter: 'blur(10px)',
+                                            WebkitBackdropFilter: 'blur(10px)',
+                                            border: '1px solid rgba(255,255,255,0.18)',
+                                            boxShadow: `0 8px 32px rgba(15, 23, 42, 0.35), inset 0 1px 0 rgba(255,255,255,0.25)`,
+                                            animation: 'float 2400ms ease-in-out infinite',
+                                            overflow: 'visible',
+                                        }}
+                                    >
+                                        <div
+                                            style={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                transformOrigin: '50% 50%',
+                                                animation: 'logoRotate 1400ms linear infinite',
+                                                animationDirection: 'alternate',
+                                            }}
+                                        >
+                                            <Image
+                                                src={logoImg}
+                                                alt="Ahken Labs"
+                                                width={48}
+                                                height={48}
+                                                priority
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Image itself — fade in when this frame is loaded */}
+                            <Image
+                                src={frame}
+                                alt={`frame-${idx}`}
+                                className={`w-full h-auto select-none transition-opacity duration-300 ease-[cubic-bezier(.4,0,.2,1)]
+                                    ${loaded[idx] ? 'opacity-100' : 'opacity-0'}`}
+                                onLoadingComplete={() => markLoaded(idx)}
+                            />
+                        </div>
+                    ))}
+                </div>
             </div>
         </div>
     );
