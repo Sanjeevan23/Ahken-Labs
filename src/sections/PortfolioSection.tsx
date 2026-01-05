@@ -3,7 +3,8 @@
 import Image from 'next/image';
 import rightArrow from '@/assets/icons/right_arrow.svg';
 import { portfolioData } from '@/api/portfolioData';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import type { StaticImageData } from 'next/image';
 import useResponsivePadding from '@/hooks/useResponsivePadding';
 import PortfolioUIOverlay from '@/components/portfolio/PortfolioUIOverlay';
 
@@ -23,7 +24,7 @@ export default function PortfolioSection() {
 
   const [isDragging, setIsDragging] = useState(false);
   const dragThreshold = 10; // px
-  let startY = 0;
+  const startY = useRef<number>(0);
 
   const visibleProjects = portfolioData.slice(0, visibleCount);
   const isFullyExpanded = visibleCount >= portfolioData.length;
@@ -33,7 +34,7 @@ export default function PortfolioSection() {
   const sectionTitleSize = isDesktop ? 40 : isTablet ? 28 : 20;
   const linksTextSize = isDesktop ? 24 : isTablet ? 22 : 20;
   const [uiOpen, setUiOpen] = useState(false);
-  const [activeFrames, setActiveFrames] = useState<any[]>([]);
+  const [activeFrames, setActiveFrames] = useState<(StaticImageData | string)[]>([]);
 
   return (
     <section id="Portfolio">
@@ -75,14 +76,15 @@ export default function PortfolioSection() {
                 style={{ userSelect: 'none' }}
                 className="relative w-full cursor-pointer"
                 onMouseDown={(e) => {
-                  startY = e.clientY;
+                  startY.current = e.clientY;
                   setIsDragging(false);
                 }}
                 onMouseMove={(e) => {
-                  if (Math.abs(e.clientY - startY) > dragThreshold) {
+                  if (Math.abs(e.clientY - startY.current) > dragThreshold) {
                     setIsDragging(true);
                   }
                 }}
+
                 onMouseUp={() => {
                   if (!isDragging) {
                     if (project.type === 'ui') {
@@ -94,14 +96,16 @@ export default function PortfolioSection() {
                   }
                 }}
                 onTouchStart={(e) => {
-                  startY = e.touches[0].clientY;
+                  startY.current = e.touches[0].clientY;
                   setIsDragging(false);
                 }}
+
                 onTouchMove={(e) => {
-                  if (Math.abs(e.touches[0].clientY - startY) > dragThreshold) {
+                  if (Math.abs(e.touches[0].clientY - startY.current) > dragThreshold) {
                     setIsDragging(true);
                   }
                 }}
+
                 onTouchEnd={() => {
                   if (!isDragging) {
                     if (project.type === 'ui') {

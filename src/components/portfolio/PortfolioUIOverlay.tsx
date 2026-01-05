@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { useEffect, useRef } from 'react';
+import type { StaticImageData } from 'next/image';
 
 export default function PortfolioUIOverlay({
     open,
@@ -9,7 +10,7 @@ export default function PortfolioUIOverlay({
     onClose,
 }: {
     open: boolean;
-    frames: any[];
+    frames: (StaticImageData | string)[];
     onClose: () => void;
 }) {
     const startX = useRef(0);
