@@ -1,7 +1,7 @@
 // src/components/LoadingOverlay.tsx
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 import Image from 'next/image';
 import logoImg from '@/assets/icons/logo.svg';
 
@@ -20,8 +20,16 @@ const LOADING_MESSAGES = [
 export default function LoadingOverlay() {
   const [visible, setVisible] = useState(true);
   const [hiding, setHiding] = useState(false);
+  const [ready, setReady] = useState(false);
 
   const [messageIndex, setMessageIndex] = useState(0);
+
+  useLayoutEffect(() => {
+    const raf = requestAnimationFrame(() => {
+      setReady(true);
+    });
+    return () => cancelAnimationFrame(raf);
+  }, []);
 
   useEffect(() => {
     setMessageIndex(
@@ -156,7 +164,8 @@ export default function LoadingOverlay() {
         WebkitBackdropFilter: 'blur(14px) saturate(140%)',
         transition: `opacity ${FADE_DURATION_MS}ms ease`,
         pointerEvents: hiding ? 'none' : 'auto',
-        opacity: hiding ? 0 : 1,
+        opacity: hiding || !ready ? 0 : 1,
+        visibility: ready ? 'visible' : 'hidden',
         boxSizing: 'border-box',
         // safe-area insets for notched devices (iOS)
         paddingTop: 'env(safe-area-inset-top)',
